@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "fcg_notifications_function": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7248",
+      "launchBrowser": false
+    }
+  }
+}
