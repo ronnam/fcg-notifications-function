@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Fgc.Notifications.Application/Fgc.Notifications.Application.csproj" Id="6592bac2-014a-470f-bea0-9de6081483e0" />
+    <Project Path="src/Fgc.Notifications.Domain/Fgc.Notifications.Domain.csproj" Id="841feb3f-1f0e-4e52-ba48-4bbc9709d521" />
+    <Project Path="src/Fgc.Notifications.Function/Fgc.Notifications.Function.csproj" Id="cadc042f-ff10-46cd-8982-7eb5cfb2d679" />
+    <Project Path="src/Fgc.Notifications.Infrastructure/Fgc.Notifications.Infrastructure.csproj" Id="7d443025-1749-4042-89f0-9baf0fdbd891" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Fgc.Notifications.IntegrationTests/Fgc.Notifications.IntegrationTests.csproj" Id="8965e341-fe63-4469-b53e-387e8efd6ab7" />
+    <Project Path="tests/Fgc.Notifications.UnitTests/Fgc.Notifications.UnitTests.csproj" Id="81dfb84f-b095-4076-b998-246e0f43dfd5" />
+  </Folder>
+</Solution>

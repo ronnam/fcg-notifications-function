@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "fcg_notifications_function": {
+    "Fgc.Notifications.Function": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7248",
+      "commandLineArgs": "--port 7004",
       "launchBrowser": false
     }
   }
