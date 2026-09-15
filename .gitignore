@@ -262,3 +262,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+# IaC — arquivo de parâmetros local (pode conter credenciais reais)
+main.parameters.json
