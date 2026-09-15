@@ -1,30 +1,23 @@
 ﻿using Fgc.MessageContracts.Events;
-using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Fgc.Notifications.Application.Consumers;
+namespace Fgc.Notifications.Application.Handlers;
 
-public class PaymentProcessedEventConsumer(ILogger<PaymentProcessedEventConsumer> logger)
-    : IConsumer<PaymentProcessedEvent>
+public class PaymentProcessedHandler(ILogger<PaymentProcessedHandler> logger)
 {
-    public Task Consume(ConsumeContext<PaymentProcessedEvent> context)
+    public Task Handle(PaymentProcessedEvent @event)
     {
-        var @event = context.Message;
         if (@event.Status == "Approved")
         {
             logger.LogInformation(
                 "📧 [PURCHASE CONFIRMATION] Para: {userId} | Assunto: Compra confirmada! | Corpo: Sua compra de {price:C2} foi aprovada. GameId: {gameId}",
-                @event.UserId,
-                @event.Price,
-                @event.GameId
-            );
+                @event.UserId, @event.Price, @event.GameId);
         }
         else if (@event.Status == "Rejected")
         {
             logger.LogWarning(
                 "⚠️ [PAYMENT REJECTED] Payment {orderedId} foi rejeitado.",
-                @event.OrderedId
-            );
+                @event.OrderedId);
         }
         return Task.CompletedTask;
     }
