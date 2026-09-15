@@ -150,13 +150,13 @@ Recebem o evento já tipado e simulam o envio (log). Ficam isolados na camada **
 ### Variáveis
 | Chave | Usada por | Exemplo |
 |---|---|---|
-| RabbitMQConnection | Triggers (`[RabbitMQTrigger]`) | amqp://admin:admin@localhost:5672/ |
-| RabbitMq:Host | Initializer | localhost |
-| MassTransit:Username | Initializer | admin |
-| MassTransit:Password | Initializer | admin |
-| MassTransit:VirtualHost | Initializer | / |
-| RabbitMq:UserCreatedQueueName | Initializer | notifications-user-created-queue |
-| RabbitMq:PaymentProcessedQueueName | Initializer | notifications-payment-processed-queue |
+| `RabbitMQConnection` | Triggers (`[RabbitMQTrigger]`) | amqp://admin:admin@localhost:5672/ |
+| `RabbitMq:Host` | Initializer | localhost |
+| `MassTransit:Username` | Initializer | admin |
+| `MassTransit:Password` | Initializer | admin |
+| `MassTransit:VirtualHost` | Initializer | / |
+| `RabbitMq:UserCreatedQueueName` | Initializer | notifications-user-created-queue |
+| `RabbitMq:PaymentProcessedQueueName` | Initializer | notifications-payment-processed-queue |
 
 ### local.settings.json (exemplo — não versionado)
 ```json
@@ -192,6 +192,48 @@ dotnet build
 func start
 ```
 Disparar um evento: publique um `UserCreatedEvent` (ex.: cadastrando um usuário pela Users API) e acompanhe o log da Function.
+
+## ☁️ Infraestrutura como Código (IaC)
+
+A infraestrutura da Function é provisionada via **Bicep** — a linguagem declarativa nativa do Azure — atendendo ao requisito da Fase 3 de manter a infraestrutura como código no próprio repositório da função.
+
+### Arquivos
+
+| Arquivo | Função |
+|---|---|
+| `main.bicep` | Provisiona a infraestrutura completa da Function |
+| `main.parameters.example.json` | Modelo de parâmetros (copie para `main.parameters.json`) |
+
+### Recursos provisionados
+
+| Recurso | Tipo Azure | Papel |
+|---|---|---|
+| Storage Account | `Microsoft.Storage/storageAccounts` | Armazenamento interno do runtime das Functions |
+| App Service Plan | `Microsoft.Web/serverfarms` (Y1 / Dynamic) | Plano **Consumption** — paga por execução, sem servidor 24/7 |
+| Function App | `Microsoft.Web/sites` | A função .NET 8 (isolated worker) com trigger RabbitMQ |
+
+### App Settings aplicados pela IaC
+
+| Configuração | Consumida por |
+|---|---|
+| `RabbitMQConnection` | `[RabbitMQTrigger]` |
+| `RabbitMq__Host` · `MassTransit__Username` · `MassTransit__Password` · `MassTransit__VirtualHost` | `RabbitMqBindingInitializer` |
+| `RabbitMq__UserCreatedQueueName` · `RabbitMq__PaymentProcessedQueueName` | `RabbitMqBindingInitializer` |
+
+### Validar o template (sem deploy)
+```bash
+az bicep build --file main.bicep
+```
+
+### Deploy (opcional)
+```bash
+az group create --name rg-fgc-notifications --location brazilsouth
+
+az deployment group create \
+  --resource-group rg-fgc-notifications \
+  --template-file main.bicep \
+  --parameters main.parameters.json
+```
 
 ## ✅ Testes
 ```bash
